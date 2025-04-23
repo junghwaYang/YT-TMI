@@ -4,7 +4,17 @@ import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { CommentChart } from '@/components/CommentChart';
+import Container from '@/components/layout/Container';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination';
 import VideoEmbed from '@/components/VideoEmbed';
+import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 
@@ -13,6 +23,8 @@ export default function VideoAnalysisPage() {
   const [sentiment, setSentiment] = useState<
     { text: string; sentiment: '긍정' | '부정' | '중립' }[]
   >([]); // 감정 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const COMMENTS_PER_PAGE = 5;
   const param = useParams();
   const { videoId } = param; // youtubeId 추출
 
@@ -40,33 +52,90 @@ export default function VideoAnalysisPage() {
   const 긍정수 = sentiment.filter(item => item.sentiment === '긍정').length;
   const 부정수 = sentiment.filter(item => item.sentiment === '부정').length;
   const 중립수 = sentiment.filter(item => item.sentiment === '중립').length;
-  const 총댓글수 = sentiment.length;
+
+  const totalPages = Math.ceil(sentiment.length / COMMENTS_PER_PAGE);
+  const paginatedSentiment = sentiment.slice(
+    (currentPage - 1) * COMMENTS_PER_PAGE,
+    currentPage * COMMENTS_PER_PAGE
+  );
+
+  const visiblePages = getVisiblePages(currentPage, totalPages);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-4xl font-bold">Video Analysis</h1>
-      <p className="text-lg text-gray-500">YouTube 댓글 감정 분석기</p>
+    <Container>
+      <div className="flex flex-col items-center justify-center mb-8 gap-2">
+        <h1 className="text-4xl font-bold text-center">Video Analysis</h1>
+        <p className="text-lg text-gray-500 text-center">
+          YouTube 댓글 감정 분석기
+        </p>
+      </div>
 
-      <VideoEmbed videoId={String(videoId)} />
+      <div className="w-full flex items-center justify-between mb-8 gap-4 flex-col xl:flex-row xl:h-[395px]">
+        <VideoEmbed videoId={String(videoId)} />
+        <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
+      </div>
 
-      <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
+      <div className="flex flex-col w-full items-center justify-center gap-4">
+        {paginatedSentiment.length > 0 && (
+          <div className="flex flex-col items-center w-full">
+            <ul className="w-full space-y-2">
+              {paginatedSentiment.map((item, index) => (
+                <li
+                  key={index}
+                  className="border p-3 rounded bg-gray-50 w-full"
+                >
+                  <span className="font-medium">{item.sentiment}</span> -{' '}
+                  {item.text}
+                </li>
+              ))}
+            </ul>
 
-      {comments.length > 0 && (
-        <div className="mt-4">
-          <h2 className="text-2xl font-semibold mt-4">Sentiment Analysis</h2>
-          <p className="text-lg mt-2">
-            총 댓글 수: {총댓글수} | 긍정: {긍정수} | 부정: {부정수} | 중립:{' '}
-            {중립수}
-          </p>
-          <ul>
-            {sentiment.map((item, index) => (
-              <li key={index} className="mt-2">
-                {item.text} - {item.sentiment}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+            <Pagination className="my-6">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={e => {
+                      e.preventDefault();
+                      setCurrentPage(p => Math.max(1, p - 1));
+                    }}
+                    className={
+                      currentPage === 1 ? 'pointer-events-none opacity-50' : ''
+                    }
+                  />
+                </PaginationItem>
+
+                {visiblePages.map(page => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={e => {
+                        e.preventDefault();
+                        setCurrentPage(page);
+                      }}
+                      isActive={page === currentPage}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={e => {
+                      e.preventDefault();
+                      setCurrentPage(p => Math.min(totalPages, p + 1));
+                    }}
+                    className={
+                      currentPage === totalPages
+                        ? 'pointer-events-none opacity-50'
+                        : ''
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+      </div>
+    </Container>
   );
 }
