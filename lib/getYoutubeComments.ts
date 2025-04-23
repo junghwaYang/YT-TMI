@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+const YOUTUBE_API_KEY = process.env.NEXT_PUBLIC_YOUTUBE_API_KEY;
 const YOUTUBE_API_URL = 'https://www.googleapis.com/youtube/v3/commentThreads';
 const YOUTUBE_API_MAX_RESULTS = 100;
 const YOUTUBE_API_PART = 'snippet';
@@ -16,9 +16,7 @@ interface YoutubeComment {
   };
 }
 
-export async function getYoutubeComments(
-  videoId: string
-): Promise<YoutubeComment[]> {
+export async function getYoutubeComments(videoId: string): Promise<string[]> {
   const { data } = await axios.get(YOUTUBE_API_URL, {
     params: {
       part: YOUTUBE_API_PART,
