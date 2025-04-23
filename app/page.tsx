@@ -8,6 +8,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { extractVideoId } from '@/lib/extractVideoId';
 
+const YOUTUBE_URL_REGEX =
+  /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}(&.*)?$/;
+
+const isValidYoutubeUrl = (url: string): boolean => {
+  return YOUTUBE_URL_REGEX.test(url);
+};
+
 export default function Home() {
   const [value, setValue] = useState<string>('');
   const videoId = extractVideoId(value);
@@ -18,9 +25,12 @@ export default function Home() {
   };
 
   const handleClick = () => {
-    if (!videoId) return alert('유효한 유튜브 URL을 입력해주세요.');
+    if (!isValidYoutubeUrl(value) && !videoId) {
+      alert('유효한 유튜브 URL을 입력해주세요.');
+      setValue('');
+      return;
+    }
     route.push(`/video/${videoId}`);
-    console.log(videoId);
   };
   return (
     <main>
