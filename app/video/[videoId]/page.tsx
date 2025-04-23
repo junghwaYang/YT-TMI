@@ -141,9 +141,8 @@ export default function VideoAnalysisPage() {
                         'before:bg-yellow-500': item.sentiment === '중립',
                       }
                     )}
-                  >
-                    {item.text}
-                  </p>
+                    dangerouslySetInnerHTML={{ __html: item.text }}
+                  />
                 </li>
               ))}
             </ul>
