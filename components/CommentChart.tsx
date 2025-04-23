@@ -1,6 +1,5 @@
 'use client';
 
-import { TrendingUp } from 'lucide-react';
 import * as React from 'react';
 import { Label, Pie, PieChart } from 'recharts';
 
@@ -19,36 +18,26 @@ import {
   ChartTooltipContent,
 } from '@/components/ui/chart';
 const chartData = [
-  { browser: 'chrome', visitors: 275, fill: 'var(--color-chrome)' },
-  { browser: 'safari', visitors: 200, fill: 'var(--color-safari)' },
-  { browser: 'firefox', visitors: 287, fill: 'var(--color-firefox)' },
-  { browser: 'edge', visitors: 173, fill: 'var(--color-edge)' },
-  { browser: 'other', visitors: 190, fill: 'var(--color-other)' },
+  { reaction: '긍정', visitors: 2, fill: '#4ade80' },
+  { reaction: '부정', visitors: 2, fill: '#f87171' },
+  { reaction: '중립', visitors: 1, fill: '#facc15' },
 ];
 
 const chartConfig = {
   visitors: {
     label: 'Visitors',
   },
-  chrome: {
-    label: 'Chrome',
-    color: 'hsl(var(--chart-1))',
+  positive: {
+    label: '긍정',
+    color: 'var(--sentiment-positive)',
   },
-  safari: {
-    label: 'Safari',
-    color: 'hsl(var(--chart-2))',
+  negative: {
+    label: '부정',
+    color: 'var(--sentiment-negative)',
   },
-  firefox: {
-    label: 'Firefox',
-    color: 'hsl(var(--chart-3))',
-  },
-  edge: {
-    label: 'Edge',
-    color: 'hsl(var(--chart-4))',
-  },
-  other: {
-    label: 'Other',
-    color: 'hsl(var(--chart-5))',
+  neutral: {
+    label: '중립',
+    color: 'var(--sentiment-neutral)',
   },
 } satisfies ChartConfig;
 
@@ -76,7 +65,7 @@ export function CommentChart() {
             <Pie
               data={chartData}
               dataKey="visitors"
-              nameKey="browser"
+              nameKey="reaction"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -114,11 +103,8 @@ export function CommentChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          해당 감정 분석은 정확하지 않을 수 있습니다.
         </div>
       </CardFooter>
     </Card>

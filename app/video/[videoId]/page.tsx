@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { CommentChart } from '@/components/CommentChart';
 import VideoEmbed from '@/components/VideoEmbed';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
@@ -47,6 +48,8 @@ export default function VideoAnalysisPage() {
       <p className="text-lg text-gray-500">YouTube 댓글 감정 분석기</p>
 
       <VideoEmbed videoId={String(videoId)} />
+
+      <CommentChart />
 
       {comments.length > 0 && (
         <div className="mt-4">
