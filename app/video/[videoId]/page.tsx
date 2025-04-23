@@ -87,7 +87,7 @@ export default function VideoAnalysisPage() {
                 >
                   <p
                     className={cn(
-                      'relative before:content-[""] before:absolute before:left-0 before:top-2 before:size-2 before:rounded-full pl-4',
+                      'relative before:content-[""] before:absolute before:left-0 before:top-2 before:size-2 before:rounded-full pl-4 text-sm',
                       {
                         'before:bg-green-500': item.sentiment === '긍정',
                         'before:bg-red-500': item.sentiment === '부정',
