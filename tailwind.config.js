@@ -1,4 +1,4 @@
-import { fontFamily } from 'tailwindcss/defaultTheme';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export const darkMode = 'class';
 export const content = [
@@ -8,7 +8,7 @@ export const content = [
 export const theme = {
   extend: {
     fontFamily: {
-      sans: ['var(--font-noto)', ...fontFamily.sans],
+      sans: ['var(--font-noto)', ...defaultTheme.fontFamily.sans],
     },
   },
 };
