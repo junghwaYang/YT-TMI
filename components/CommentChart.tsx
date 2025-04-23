@@ -17,11 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-const chartData = [
-  { reaction: '긍정', visitors: 2, fill: '#4ade80' },
-  { reaction: '부정', visitors: 2, fill: '#f87171' },
-  { reaction: '중립', visitors: 1, fill: '#facc15' },
-];
 
 const chartConfig = {
   visitors: {
@@ -41,10 +36,27 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function CommentChart() {
+export function CommentChart({
+  긍정수,
+  부정수,
+  중립수,
+}: {
+  긍정수: number;
+  부정수: number;
+  중립수: number;
+}) {
+  const chartData = React.useMemo(
+    () => [
+      { reaction: '긍정', visitors: 긍정수, fill: '#4ade80' },
+      { reaction: '부정', visitors: 부정수, fill: '#f87171' },
+      { reaction: '중립', visitors: 중립수, fill: '#facc15' },
+    ],
+    [긍정수, 부정수, 중립수]
+  );
+
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
-  }, []);
+  }, [chartData]);
 
   return (
     <Card className="flex flex-col">

@@ -49,7 +49,7 @@ export default function VideoAnalysisPage() {
 
       <VideoEmbed videoId={String(videoId)} />
 
-      <CommentChart />
+      <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
 
       {comments.length > 0 && (
         <div className="mt-4">
