@@ -124,7 +124,7 @@ export default function VideoAnalysisPage() {
         </Select>
       </div>
       <div className="flex flex-col w-full items-center justify-center gap-4">
-        {paginatedSentiment.length > 0 && (
+        {paginatedSentiment.length > 0 ? (
           <div className="flex flex-col items-center w-full">
             <ul className="w-full space-y-2">
               {paginatedSentiment.map((item, index) => (
@@ -190,6 +190,10 @@ export default function VideoAnalysisPage() {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
+          </div>
+        ) : (
+          <div className="flex items-center justify-center w-full h-full py-20">
+            <p className="text-lg text-gray-500 ">분석된 댓글이 없습니다.</p>
           </div>
         )}
       </div>
