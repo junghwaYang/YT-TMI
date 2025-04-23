@@ -36,6 +36,11 @@ export default function VideoAnalysisPage() {
     fetchSentiment();
   }, [comments]);
 
+  const 긍정수 = sentiment.filter(item => item.sentiment === '긍정').length;
+  const 부정수 = sentiment.filter(item => item.sentiment === '부정').length;
+  const 중립수 = sentiment.filter(item => item.sentiment === '중립').length;
+  const 총댓글수 = sentiment.length;
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-4xl font-bold">Video Analysis</h1>
@@ -46,6 +51,10 @@ export default function VideoAnalysisPage() {
       {comments.length > 0 && (
         <div className="mt-4">
           <h2 className="text-2xl font-semibold mt-4">Sentiment Analysis</h2>
+          <p className="text-lg mt-2">
+            총 댓글 수: {총댓글수} | 긍정: {긍정수} | 부정: {부정수} | 중립:{' '}
+            {중립수}
+          </p>
           <ul>
             {sentiment.map((item, index) => (
               <li key={index} className="mt-2">
