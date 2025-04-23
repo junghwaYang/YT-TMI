@@ -1,11 +1,13 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
+import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { CommentChart } from '@/components/CommentChart';
 import Container from '@/components/layout/Container';
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
@@ -40,6 +42,7 @@ export default function VideoAnalysisPage() {
     { text: string; sentiment: '긍정' | '부정' | '중립' }[]
   >([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<boolean>(false);
 
   const COMMENTS_PER_PAGE = 5;
   const param = useParams();
@@ -78,8 +81,14 @@ export default function VideoAnalysisPage() {
   useEffect(() => {
     // 댓글 가져오기
     const fetchComments = async () => {
-      const res = await getYoutubeComments(String(videoId));
-      setComments(res);
+      try {
+        const res = await getYoutubeComments(String(videoId));
+        setComments(res);
+        setError(false);
+      } catch (err) {
+        setError(true);
+        console.error('Error fetching comments:', err);
+      }
     };
 
     fetchComments();
@@ -94,7 +103,9 @@ export default function VideoAnalysisPage() {
         const res = await postSentiment({ comments });
         setSentiment(res);
         setSelectFilter(res);
+        setError(false);
       } catch (err) {
+        setError(true);
         console.error('Error fetching sentiment:', err);
       } finally {
         setLoading(false);
@@ -102,6 +113,21 @@ export default function VideoAnalysisPage() {
     };
     fetchSentiment();
   }, [comments]);
+
+  if (error) {
+    return (
+      <Container>
+        <div className="flex flex-col gap-4 items-center justify-center w-full h-full py-20">
+          <p className="text-lg text-gray-500">
+            댓글을 가져오는 중 오류가 발생했습니다. 다시 시도 해주세요.
+          </p>
+          <Button asChild>
+            <Link href="/">메인으로 돌아가기</Link>
+          </Button>
+        </div>
+      </Container>
+    );
+  }
 
   return (
     <Container>
