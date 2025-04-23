@@ -1,5 +1,6 @@
 'use client';
 
+import { Loader2 } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -21,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
 import VideoEmbed from '@/components/VideoEmbed';
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
@@ -37,32 +39,11 @@ export default function VideoAnalysisPage() {
   const [selectFilter, setSelectFilter] = useState<
     { text: string; sentiment: '긍정' | '부정' | '중립' }[]
   >([]);
+  const [loading, setLoading] = useState(false);
 
   const COMMENTS_PER_PAGE = 5;
   const param = useParams();
   const { videoId } = param; // youtubeId 추출
-
-  useEffect(() => {
-    // 댓글 가져오기
-    const fetchComments = async () => {
-      const res = await getYoutubeComments(String(videoId));
-      setComments(res);
-    };
-
-    fetchComments();
-  }, [videoId]);
-
-  useEffect(() => {
-    // 감정 분석하기
-    const fetchSentiment = async () => {
-      if (comments.length === 0) return;
-      const res = await postSentiment({ comments });
-      setSentiment(res);
-      setSelectFilter(res);
-    };
-
-    fetchSentiment();
-  }, [comments]);
 
   const 긍정수 = sentiment.filter(item => item.sentiment === '긍정').length;
   const 부정수 = sentiment.filter(item => item.sentiment === '부정').length;
@@ -78,6 +59,7 @@ export default function VideoAnalysisPage() {
 
   const handleSelectChange = (value: string) => {
     setSelectValue(value);
+    setCurrentPage(1);
     switch (value) {
       case 'positive':
         setSelectFilter(sentiment.filter(item => item.sentiment === '긍정'));
@@ -93,7 +75,33 @@ export default function VideoAnalysisPage() {
     }
   };
 
-  console.log(selectValue);
+  useEffect(() => {
+    // 댓글 가져오기
+    const fetchComments = async () => {
+      const res = await getYoutubeComments(String(videoId));
+      setComments(res);
+    };
+
+    fetchComments();
+  }, [videoId]);
+
+  useEffect(() => {
+    // 감정 분석하기
+    const fetchSentiment = async () => {
+      if (comments.length === 0) return;
+      setLoading(true);
+      try {
+        const res = await postSentiment({ comments });
+        setSentiment(res);
+        setSelectFilter(res);
+      } catch (err) {
+        console.error('Error fetching sentiment:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSentiment();
+  }, [comments]);
 
   return (
     <Container>
@@ -106,10 +114,24 @@ export default function VideoAnalysisPage() {
 
       <div className="w-full flex items-center justify-between mb-8 gap-4 flex-col xl:flex-row xl:h-[395px]">
         <VideoEmbed videoId={String(videoId)} />
-        <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
+        {loading ? (
+          <div className="flex items-center justify-center w-full py-16">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : sentiment.length > 0 ? (
+          <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
+        ) : (
+          <div className="flex items-center justify-center w-full h-full py-20">
+            <p className="text-lg text-gray-500">댓글이 존재하지 않습니다.</p>
+          </div>
+        )}
       </div>
       <div className="flex justify-end mb-4">
-        <Select defaultValue="all" onValueChange={handleSelectChange}>
+        <Select
+          defaultValue="all"
+          onValueChange={handleSelectChange}
+          value={selectValue}
+        >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select a fruit" />
           </SelectTrigger>
@@ -124,7 +146,18 @@ export default function VideoAnalysisPage() {
         </Select>
       </div>
       <div className="flex flex-col w-full items-center justify-center gap-4">
-        {paginatedSentiment.length > 0 ? (
+        {loading ? (
+          <ul className="w-full space-y-2">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <li
+                key={i}
+                className="flex items-center gap-2 border p-3 rounded bg-gray-50 w-full"
+              >
+                <Skeleton className="h-4 w-full rounded" />
+              </li>
+            ))}
+          </ul>
+        ) : paginatedSentiment.length > 0 ? (
           <div className="flex flex-col items-center w-full">
             <ul className="w-full space-y-2">
               {paginatedSentiment.map((item, index) => (
