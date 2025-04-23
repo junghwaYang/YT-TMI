@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import VideoEmbed from '@/components/VideoEmbed';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';

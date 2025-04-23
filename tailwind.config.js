@@ -1,17 +1,15 @@
-const { fontFamily } = require('tailwindcss/defaultTheme');
+import { fontFamily } from 'tailwindcss/defaultTheme';
 
-module.exports = {
-  darkMode: 'class',
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-  ],
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['var(--font-noto)', ...fontFamily.sans],
-      },
+export const darkMode = 'class';
+export const content = [
+  './pages/**/*.{js,ts,jsx,tsx}',
+  './components/**/*.{js,ts,jsx,tsx}',
+];
+export const theme = {
+  extend: {
+    fontFamily: {
+      sans: ['var(--font-noto)', ...fontFamily.sans],
     },
   },
-  plugins: [],
 };
+export const plugins = [];
