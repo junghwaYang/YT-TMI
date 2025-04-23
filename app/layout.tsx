@@ -3,6 +3,8 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 
+import { Toaster } from '@/components/ui/sonner';
+
 const notoSansKr = Noto_Sans_KR({
   variable: '--font-noto',
   subsets: ['latin'],
@@ -20,7 +22,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${notoSansKr.variable} antialiased`}>{children}</body>
+      <body className={`${notoSansKr.variable} antialiased`}>
+        <main>{children}</main>
+        <Toaster />
+      </body>
     </html>
   );
 }

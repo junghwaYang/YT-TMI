@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
@@ -26,7 +27,7 @@ export default function Home() {
 
   const handleClick = () => {
     if (!isValidYoutubeUrl(value) && !videoId) {
-      alert('유효한 유튜브 URL을 입력해주세요.');
+      toast.error('유효한 유튜브 URL을 입력해주세요.');
       setValue('');
       return;
     }
