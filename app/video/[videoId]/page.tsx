@@ -17,6 +17,7 @@ import VideoEmbed from '@/components/VideoEmbed';
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
+import { cn } from '@/lib/utils';
 
 export default function VideoAnalysisPage() {
   const [comments, setComments] = useState<string[]>([]); // 댓글 상태 추가
@@ -82,10 +83,20 @@ export default function VideoAnalysisPage() {
               {paginatedSentiment.map((item, index) => (
                 <li
                   key={index}
-                  className="border p-3 rounded bg-gray-50 w-full"
+                  className="flex items-center gap-2 border p-3 rounded bg-gray-50 w-full"
                 >
-                  <span className="font-medium">{item.sentiment}</span> -{' '}
-                  {item.text}
+                  <p
+                    className={cn(
+                      'relative before:content-[""] before:absolute before:left-0 before:top-2 before:size-2 before:rounded-full pl-4',
+                      {
+                        'before:bg-green-500': item.sentiment === '긍정',
+                        'before:bg-red-500': item.sentiment === '부정',
+                        'before:bg-yellow-500': item.sentiment === '중립',
+                      }
+                    )}
+                  >
+                    {item.text}
+                  </p>
                 </li>
               ))}
             </ul>
