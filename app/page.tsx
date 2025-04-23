@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
 import Container from '@/components/layout/Container';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { extractVideoId } from '@/lib/extractVideoId';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 export default function Home() {
   const [value, setValue] = useState<string>('');

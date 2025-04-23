@@ -1,9 +1,10 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+
 import VideoEmbed from '@/components/VideoEmbed';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export default function VideoAnalysisPage() {
   const [comments, setComments] = useState<string[]>([]); // 댓글 상태 추가
