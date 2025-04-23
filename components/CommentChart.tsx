@@ -59,8 +59,8 @@ export function CommentChart({
   }, [chartData]);
 
   return (
-    <Card className="flex flex-col">
-      <CardHeader className="items-center pb-0">
+    <Card className="flex flex-col w-full gap-2 xl:h-full">
+      <CardHeader className="items-center justify-center text-center pb-0">
         <CardTitle>댓글 분석 차트</CardTitle>
         <CardDescription>가장 최신 100개 코멘트 분석표</CardDescription>
       </CardHeader>
@@ -114,7 +114,7 @@ export function CommentChart({
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
+      <CardFooter className="flex-col gap-2 text-xs">
         <div className="leading-none text-muted-foreground">
           해당 감정 분석은 정확하지 않을 수 있습니다.
         </div>

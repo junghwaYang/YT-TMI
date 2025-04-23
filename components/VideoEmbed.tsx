@@ -6,7 +6,7 @@ export default function VideoEmbed({ videoId }: Props) {
   if (!videoId) return null;
 
   return (
-    <div className="w-full max-w-2xl aspect-video mt-4">
+    <div className="w-full aspect-video xl:h-[395px]">
       <iframe
         className="w-full h-full rounded-lg"
         src={`https://www.youtube.com/embed/${videoId}`}
