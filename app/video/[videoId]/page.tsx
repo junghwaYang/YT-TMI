@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 
 import { CommentChart } from '@/components/CommentChart';
 import Container from '@/components/layout/Container';
+import Title from '@/components/layout/Title';
 import { Button } from '@/components/ui/button';
 import {
   Pagination,
@@ -130,13 +131,11 @@ export default function VideoAnalysisPage() {
   }
 
   return (
-    <Container>
-      <div className="flex flex-col items-center justify-center mb-8 gap-2">
-        <h1 className="text-4xl font-bold text-center">Video Analysis</h1>
-        <p className="text-lg text-gray-500 text-center">
-          YouTube 댓글 감정 분석기
-        </p>
-      </div>
+    <>
+      <Title>
+        <Title.h1>Video Analysis</Title.h1>
+        <Title.p>YouTube 댓글 감정 분석기</Title.p>
+      </Title>
 
       <div className="w-full flex items-center justify-between mb-8 gap-4 flex-col xl:flex-row xl:h-[395px]">
         <VideoEmbed videoId={String(videoId)} />
@@ -256,6 +255,6 @@ export default function VideoAnalysisPage() {
           </div>
         )}
       </div>
-    </Container>
+    </>
   );
 }

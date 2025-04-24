@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Noto_Sans_KR } from 'next/font/google';
 
+import Container from '@/components/layout/Container';
 import { Toaster } from '@/components/ui/sonner';
 
 const notoSansKr = Noto_Sans_KR({
@@ -58,7 +59,9 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${notoSansKr.variable} antialiased`}>
-        <main>{children}</main>
+        <main>
+          <Container>{children}</Container>
+        </main>
         <Toaster />
       </body>
     </html>
