@@ -81,11 +81,6 @@ export default function VideoAnalysisPage() {
 
   const visiblePages = getVisiblePages(currentPage, totalPages);
 
-  const handleSelectChange = (value: string) => {
-    setSelectValue(value);
-    setCurrentPage(1);
-  };
-
   if (commentsError || sentimentError) {
     return (
       <Container>
@@ -117,7 +112,13 @@ export default function VideoAnalysisPage() {
         }}
       />
 
-      <CommentFilter value={selectValue} onChange={handleSelectChange} />
+      <CommentFilter
+        value={selectValue}
+        onChange={value => {
+          setSelectValue(value);
+          setCurrentPage(1);
+        }}
+      />
 
       <div className="flex flex-col w-full items-center justify-center gap-4">
         {commentsLoading || sentimentLoading ? (
