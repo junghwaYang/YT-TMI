@@ -20,12 +20,12 @@ export const metadata: Metadata = {
   keywords: ['YouTube', '댓글', '감정 분석', 'YT-TMI', 'AI 분석기'],
   authors: [{ name: 'junghwaYang', url: 'https://github.com/junghwaYang/YT-TMI' }],
   creator: 'Lua',
-  metadataBase: new URL('https://YT-TMI.vercel.app/'), // 배포 후 도메인
+  metadataBase: new URL('https://yt-tmi.vercel.app/'), // 배포 후 도메인
   openGraph: {
     title: 'YT-TMI | 유튜브 댓글 감정 분석기',
     description:
       '유튜브 댓글을 긍정/부정/중립으로 분석하고 시각화합니다. 분위기를 한눈에 확인해보세요!',
-    url: 'https://YT-TMI.vercel.app/',
+    url: 'https://yt-tmi.vercel.app/',
     siteName: 'YT-TMI',
     images: [
       {
