@@ -3,12 +3,12 @@
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import Container from '@/components/layout/Container';
 import Title from '@/components/layout/Title';
 import { Button } from '@/components/ui/button';
-import getVisiblePages from '@/lib/getVisiblePages';
+import { usePaginatedSentiment } from '@/hooks/usePaginatedSentiment';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 
@@ -47,39 +47,12 @@ export default function VideoAnalysisPage() {
     enabled: !!comments && comments.length > 0,
   });
 
-  const filteredSentiment = useMemo(() => {
-    switch (selectValue) {
-      case 'positive':
-        return sentiment.filter((item: { sentiment: string }) => item.sentiment === '긍정');
-      case 'negative':
-        return sentiment.filter((item: { sentiment: string }) => item.sentiment === '부정');
-      case 'neutral':
-        return sentiment.filter((item: { sentiment: string }) => item.sentiment === '중립');
-      default:
-        return sentiment;
-    }
-  }, [sentiment, selectValue]);
-
-  const sentimentCount = useMemo(() => {
-    return sentiment.reduce(
-      (acc: { 긍정: number; 부정: number; 중립: number }, cur: { sentiment: string }) => {
-        acc[cur.sentiment as keyof typeof acc]++;
-        return acc;
-      },
-      { 긍정: 0, 부정: 0, 중립: 0 }
-    );
-  }, [sentiment]);
-
-  const totalPages = Math.ceil(filteredSentiment.length / COMMENTS_PER_PAGE);
-
-  const paginatedSentiment = useMemo(() => {
-    return filteredSentiment.slice(
-      (currentPage - 1) * COMMENTS_PER_PAGE,
-      currentPage * COMMENTS_PER_PAGE
-    );
-  }, [filteredSentiment, currentPage]);
-
-  const visiblePages = getVisiblePages(currentPage, totalPages);
+  const { paginatedSentiment, sentimentCount, totalPages, visiblePages } = usePaginatedSentiment(
+    sentiment,
+    selectValue,
+    currentPage,
+    COMMENTS_PER_PAGE
+  );
 
   if (commentsError || sentimentError) {
     return (
