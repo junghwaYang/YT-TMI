@@ -54,6 +54,30 @@ export default function VideoAnalysisPage() {
     COMMENTS_PER_PAGE
   );
 
+  const isLoading = commentsLoading || sentimentLoading;
+  const hasResult = paginatedSentiment.length > 0;
+  const currentState = isLoading ? 'loading' : hasResult ? 'success' : 'empty';
+
+  const renderCommentState = {
+    loading: <CommentSkeleton />,
+    success: (
+      <div className="flex flex-col items-center w-full">
+        <CommentList paginatedSentiment={paginatedSentiment} />
+        <CommentPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          visiblePages={visiblePages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
+    ),
+    empty: (
+      <ErrorSection>
+        <ErrorSection.p>분석된 댓글이 없습니다.</ErrorSection.p>
+      </ErrorSection>
+    ),
+  };
+
   if (commentsError || sentimentError) {
     return (
       <Container>
@@ -94,24 +118,7 @@ export default function VideoAnalysisPage() {
       />
 
       <div className="flex flex-col w-full items-center justify-center gap-4">
-        {commentsLoading || sentimentLoading ? (
-          <CommentSkeleton />
-        ) : paginatedSentiment.length > 0 ? (
-          <div className="flex flex-col items-center w-full">
-            <CommentList paginatedSentiment={paginatedSentiment} />
-
-            <CommentPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              visiblePages={visiblePages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
-        ) : (
-          <ErrorSection>
-            <ErrorSection.p>분석된 댓글이 없습니다.</ErrorSection.p>
-          </ErrorSection>
-        )}
+        {renderCommentState[currentState]}
       </div>
     </>
   );
