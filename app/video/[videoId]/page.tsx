@@ -90,6 +90,7 @@ export default function VideoAnalysisPage() {
   }, [_videoId]);
 
   useEffect(() => {
+    if (!comments || comments.length === 0) return;
     // 감정 분석하기
     const fetchSentiment = async () => {
       if (comments.length === 0) return;
