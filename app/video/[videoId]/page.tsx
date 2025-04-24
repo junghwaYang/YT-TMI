@@ -1,11 +1,9 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { CommentChart } from '@/components/CommentChart';
 import Container from '@/components/layout/Container';
 import Title from '@/components/layout/Title';
 import { Button } from '@/components/ui/button';
@@ -18,7 +16,6 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import VideoEmbed from '@/components/VideoEmbed';
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
@@ -26,6 +23,7 @@ import { cn } from '@/lib/utils';
 
 import CommentFilter from './_components/CommentFilter';
 import ErrorSection from './_components/ErrorSection';
+import VideoChatSection from './_components/VideoChatSection';
 
 export default function VideoAnalysisPage() {
   const [comments, setComments] = useState<string[]>([]); // 댓글 상태 추가
@@ -125,6 +123,8 @@ export default function VideoAnalysisPage() {
     );
   }
 
+  const hasData = sentiment.length > 0;
+
   return (
     <>
       <Title>
@@ -132,20 +132,13 @@ export default function VideoAnalysisPage() {
         <Title.p>YouTube 댓글 감정 분석기</Title.p>
       </Title>
 
-      <div className="w-full flex items-center justify-between mb-8 gap-4 flex-col xl:flex-row xl:h-[395px]">
-        <VideoEmbed videoId={String(videoId)} />
-        {loading ? (
-          <div className="flex items-center justify-center w-full py-16">
-            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-          </div>
-        ) : sentiment.length > 0 ? (
-          <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
-        ) : (
-          <ErrorSection>
-            <ErrorSection.p>댓글이 존재하지 않습니다.</ErrorSection.p>
-          </ErrorSection>
-        )}
-      </div>
+      <VideoChatSection
+        loading={loading}
+        videoId={String(videoId)}
+        hasData={hasData}
+        sentimentCount={{ 긍정수, 부정수, 중립수 }}
+      />
+
       <CommentFilter value={selectValue} onChange={handleSelectChange} />
 
       <div className="flex flex-col w-full items-center justify-center gap-4">
