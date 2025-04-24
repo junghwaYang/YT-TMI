@@ -18,9 +18,9 @@ import {
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
-import { cn } from '@/lib/utils';
 
 import CommentFilter from './_components/CommentFilter';
+import CommentList from './_components/CommentList';
 import CommentSkeleton from './_components/CommentSkeleton';
 import ErrorSection from './_components/ErrorSection';
 import VideoChatSection from './_components/VideoChatSection';
@@ -144,26 +144,7 @@ export default function VideoAnalysisPage() {
           <CommentSkeleton />
         ) : paginatedSentiment.length > 0 ? (
           <div className="flex flex-col items-center w-full">
-            <ul className="w-full space-y-2">
-              {paginatedSentiment.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex items-center gap-2 border p-3 rounded bg-gray-50 w-full"
-                >
-                  <p
-                    className={cn(
-                      'relative before:content-[""] before:absolute before:left-0 before:top-2 before:size-2 before:rounded-full pl-4 text-sm',
-                      {
-                        'before:bg-green-500': item.sentiment === '긍정',
-                        'before:bg-red-500': item.sentiment === '부정',
-                        'before:bg-yellow-500': item.sentiment === '중립',
-                      }
-                    )}
-                    dangerouslySetInnerHTML={{ __html: item.text }}
-                  />
-                </li>
-              ))}
-            </ul>
+            <CommentList paginatedSentiment={paginatedSentiment} />
 
             <Pagination className="my-6">
               <PaginationContent>
