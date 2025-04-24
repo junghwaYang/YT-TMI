@@ -1,13 +1,14 @@
 import type { protos } from '@google-cloud/language';
 import { LanguageServiceClient } from '@google-cloud/language';
 
+import { gcpCredentials } from './gcp';
+
 const client = new LanguageServiceClient({
-  keyFilename: './gcp-key.json',
+  credentials: gcpCredentials,
+  projectId: gcpCredentials.project_id,
 });
 
-export async function analyzeSentiment(
-  text: string
-): Promise<'긍정' | '부정' | '중립'> {
+export async function analyzeSentiment(text: string): Promise<'긍정' | '부정' | '중립'> {
   const laughterRegex = /(ㅋㅋ|ㅎㅎ|웃기|재밌|웃긴|😂|🤣)/i;
   if (laughterRegex.test(text.toLowerCase())) {
     return '긍정';
