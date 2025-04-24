@@ -24,14 +24,15 @@ export default function VideoAnalysisPage() {
     { text: string; sentiment: '긍정' | '부정' | '중립' }[]
   >([]); // 감정 상태
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectValue, setSelectValue] = useState('all');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectValue, setSelectValue] = useState<string>('all');
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
   const COMMENTS_PER_PAGE = 5;
   const { videoId } = useParams<{ videoId: string }>(); // youtubeId 추출
+  const _videoId = String(videoId);
 
   const filteredSentiment = useMemo(() => {
     switch (selectValue) {
@@ -70,7 +71,7 @@ export default function VideoAnalysisPage() {
     // 댓글 가져오기
     const fetchComments = async () => {
       try {
-        const res = await getYoutubeComments(String(videoId));
+        const res = await getYoutubeComments(_videoId);
         setComments(res);
         setError(false);
       } catch (err) {
@@ -80,7 +81,7 @@ export default function VideoAnalysisPage() {
     };
 
     fetchComments();
-  }, [videoId]);
+  }, [_videoId]);
 
   useEffect(() => {
     // 감정 분석하기
@@ -88,7 +89,7 @@ export default function VideoAnalysisPage() {
       if (comments.length === 0) return;
       setLoading(true);
       try {
-        const res = await postSentiment({ comments });
+        const res = await postSentiment({ comments: comments });
         setSentiment(res);
         setError(false);
       } catch (err) {
@@ -123,7 +124,7 @@ export default function VideoAnalysisPage() {
 
       <VideoChatSection
         loading={loading}
-        videoId={String(videoId)}
+        videoId={_videoId}
         hasData={sentiment.length > 0}
         sentimentCount={{ positive, negative, neutral }}
       />
