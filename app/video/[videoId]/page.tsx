@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import Container from '@/components/layout/Container';
 import Title from '@/components/layout/Title';
@@ -22,12 +22,11 @@ export default function VideoAnalysisPage() {
   const [comments, setComments] = useState<string[]>([]); // 댓글 상태 추가
   const [sentiment, setSentiment] = useState<
     { text: string; sentiment: '긍정' | '부정' | '중립' }[]
-  >([]); // 감정 상태 추가
+  >([]); // 감정 상태
+
   const [currentPage, setCurrentPage] = useState(1);
   const [selectValue, setSelectValue] = useState('all');
-  const [selectFilter, setSelectFilter] = useState<
-    { text: string; sentiment: '긍정' | '부정' | '중립' }[]
-  >([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
@@ -35,34 +34,37 @@ export default function VideoAnalysisPage() {
   const param = useParams();
   const { videoId } = param; // youtubeId 추출
 
-  const 긍정수 = sentiment.filter(item => item.sentiment === '긍정').length;
-  const 부정수 = sentiment.filter(item => item.sentiment === '부정').length;
-  const 중립수 = sentiment.filter(item => item.sentiment === '중립').length;
+  const filteredSentiment = useMemo(() => {
+    switch (selectValue) {
+      case 'positive':
+        return sentiment.filter(item => item.sentiment === '긍정');
+      case 'negative':
+        return sentiment.filter(item => item.sentiment === '부정');
+      case 'neutral':
+        return sentiment.filter(item => item.sentiment === '중립');
+      default:
+        return sentiment;
+    }
+  }, [sentiment, selectValue]);
 
-  const totalPages = Math.ceil(selectFilter.length / COMMENTS_PER_PAGE);
-  const paginatedSentiment = selectFilter.slice(
-    (currentPage - 1) * COMMENTS_PER_PAGE,
-    currentPage * COMMENTS_PER_PAGE
-  );
+  const positive = sentiment.filter(item => item.sentiment === '긍정').length;
+  const negative = sentiment.filter(item => item.sentiment === '부정').length;
+  const neutral = sentiment.filter(item => item.sentiment === '중립').length;
+
+  const totalPages = Math.ceil(filteredSentiment.length / COMMENTS_PER_PAGE);
+
+  const paginatedSentiment = useMemo(() => {
+    return filteredSentiment.slice(
+      (currentPage - 1) * COMMENTS_PER_PAGE,
+      currentPage * COMMENTS_PER_PAGE
+    );
+  }, [filteredSentiment, currentPage]);
 
   const visiblePages = getVisiblePages(currentPage, totalPages);
 
   const handleSelectChange = (value: string) => {
     setSelectValue(value);
     setCurrentPage(1);
-    switch (value) {
-      case 'positive':
-        setSelectFilter(sentiment.filter(item => item.sentiment === '긍정'));
-        break;
-      case 'negative':
-        setSelectFilter(sentiment.filter(item => item.sentiment === '부정'));
-        break;
-      case 'neutral':
-        setSelectFilter(sentiment.filter(item => item.sentiment === '중립'));
-        break;
-      default:
-        setSelectFilter(sentiment);
-    }
   };
 
   useEffect(() => {
@@ -89,7 +91,6 @@ export default function VideoAnalysisPage() {
       try {
         const res = await postSentiment({ comments });
         setSentiment(res);
-        setSelectFilter(res);
         setError(false);
       } catch (err) {
         setError(true);
@@ -114,8 +115,6 @@ export default function VideoAnalysisPage() {
     );
   }
 
-  const hasData = sentiment.length > 0;
-
   return (
     <>
       <Title>
@@ -126,8 +125,8 @@ export default function VideoAnalysisPage() {
       <VideoChatSection
         loading={loading}
         videoId={String(videoId)}
-        hasData={hasData}
-        sentimentCount={{ 긍정수, 부정수, 중립수 }}
+        hasData={sentiment.length > 0}
+        sentimentCount={{ positive, negative, neutral }}
       />
 
       <CommentFilter value={selectValue} onChange={handleSelectChange} />
