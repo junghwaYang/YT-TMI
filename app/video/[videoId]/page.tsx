@@ -47,9 +47,15 @@ export default function VideoAnalysisPage() {
     }
   }, [sentiment, selectValue]);
 
-  const positive = sentiment.filter(item => item.sentiment === '긍정').length;
-  const negative = sentiment.filter(item => item.sentiment === '부정').length;
-  const neutral = sentiment.filter(item => item.sentiment === '중립').length;
+  const sentimentCount = useMemo(() => {
+    return sentiment.reduce(
+      (acc, cur) => {
+        acc[cur.sentiment]++;
+        return acc;
+      },
+      { 긍정: 0, 부정: 0, 중립: 0 }
+    );
+  }, [sentiment]);
 
   const totalPages = Math.ceil(filteredSentiment.length / COMMENTS_PER_PAGE);
 
@@ -126,7 +132,11 @@ export default function VideoAnalysisPage() {
         loading={loading}
         videoId={_videoId}
         hasData={sentiment.length > 0}
-        sentimentCount={{ positive, negative, neutral }}
+        sentimentCount={{
+          positive: sentimentCount.긍정,
+          negative: sentimentCount.부정,
+          neutral: sentimentCount.중립,
+        }}
       />
 
       <CommentFilter value={selectValue} onChange={handleSelectChange} />
