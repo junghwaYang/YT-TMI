@@ -32,6 +32,8 @@ import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 import { cn } from '@/lib/utils';
 
+import ErrorSection from './_components/ErrorSection';
+
 export default function VideoAnalysisPage() {
   const [comments, setComments] = useState<string[]>([]); // 댓글 상태 추가
   const [sentiment, setSentiment] = useState<
@@ -118,14 +120,14 @@ export default function VideoAnalysisPage() {
   if (error) {
     return (
       <Container>
-        <div className="flex flex-col gap-4 items-center justify-center w-full h-full py-20">
-          <p className="text-lg text-gray-500">
-            댓글을 가져오는 중 오류가 발생했습니다. 다시 시도 해주세요.
-          </p>
+        <ErrorSection>
+          <ErrorSection.p>
+            오류가 발생했습니다. 다시 시도 해주세요.
+          </ErrorSection.p>
           <Button asChild>
             <Link href="/">메인으로 돌아가기</Link>
           </Button>
-        </div>
+        </ErrorSection>
       </Container>
     );
   }
@@ -146,9 +148,9 @@ export default function VideoAnalysisPage() {
         ) : sentiment.length > 0 ? (
           <CommentChart 긍정수={긍정수} 부정수={부정수} 중립수={중립수} />
         ) : (
-          <div className="flex items-center justify-center w-full h-full py-20">
-            <p className="text-lg text-gray-500">댓글이 존재하지 않습니다.</p>
-          </div>
+          <ErrorSection>
+            <ErrorSection.p>댓글이 존재하지 않습니다.</ErrorSection.p>
+          </ErrorSection>
         )}
       </div>
       <div className="flex justify-end mb-4">
@@ -250,9 +252,9 @@ export default function VideoAnalysisPage() {
             </Pagination>
           </div>
         ) : (
-          <div className="flex items-center justify-center w-full h-full py-20">
-            <p className="text-lg text-gray-500 ">분석된 댓글이 없습니다.</p>
-          </div>
+          <ErrorSection>
+            <ErrorSection.p>분석된 댓글이 없습니다.</ErrorSection.p>
+          </ErrorSection>
         )}
       </div>
     </>
