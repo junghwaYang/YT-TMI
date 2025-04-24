@@ -15,13 +15,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import { Skeleton } from '@/components/ui/skeleton';
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 import { cn } from '@/lib/utils';
 
 import CommentFilter from './_components/CommentFilter';
+import CommentSkeleton from './_components/CommentSkeleton';
 import ErrorSection from './_components/ErrorSection';
 import VideoChatSection from './_components/VideoChatSection';
 
@@ -112,9 +112,7 @@ export default function VideoAnalysisPage() {
     return (
       <Container>
         <ErrorSection>
-          <ErrorSection.p>
-            오류가 발생했습니다. 다시 시도 해주세요.
-          </ErrorSection.p>
+          <ErrorSection.p>오류가 발생했습니다. 다시 시도 해주세요.</ErrorSection.p>
           <Button asChild>
             <Link href="/">메인으로 돌아가기</Link>
           </Button>
@@ -143,16 +141,7 @@ export default function VideoAnalysisPage() {
 
       <div className="flex flex-col w-full items-center justify-center gap-4">
         {loading ? (
-          <ul className="w-full space-y-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <li
-                key={i}
-                className="flex items-center gap-2 border p-3 rounded bg-gray-50 w-full"
-              >
-                <Skeleton className="h-4 w-full rounded" />
-              </li>
-            ))}
-          </ul>
+          <CommentSkeleton />
         ) : paginatedSentiment.length > 0 ? (
           <div className="flex flex-col items-center w-full">
             <ul className="w-full space-y-2">
@@ -184,9 +173,7 @@ export default function VideoAnalysisPage() {
                       e.preventDefault();
                       setCurrentPage(p => Math.max(1, p - 1));
                     }}
-                    className={
-                      currentPage === 1 ? 'pointer-events-none opacity-50' : ''
-                    }
+                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
                   />
                 </PaginationItem>
 
@@ -210,11 +197,7 @@ export default function VideoAnalysisPage() {
                       e.preventDefault();
                       setCurrentPage(p => Math.min(totalPages, p + 1));
                     }}
-                    className={
-                      currentPage === totalPages
-                        ? 'pointer-events-none opacity-50'
-                        : ''
-                    }
+                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
                   />
                 </PaginationItem>
               </PaginationContent>
