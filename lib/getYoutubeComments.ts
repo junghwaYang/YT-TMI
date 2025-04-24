@@ -26,7 +26,5 @@ export async function getYoutubeComments(videoId: string): Promise<string[]> {
     },
   });
 
-  return data.items.map(
-    (item: YoutubeComment) => item.snippet.topLevelComment.snippet.textDisplay
-  );
+  return data.items.map((item: YoutubeComment) => item.snippet.topLevelComment.snippet.textDisplay);
 }

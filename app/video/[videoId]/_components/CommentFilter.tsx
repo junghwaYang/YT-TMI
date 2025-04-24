@@ -7,13 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-function CommentFilter({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function CommentFilter({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return (
     <div className="flex items-center justify-end mb-2 w-full">
       <Select defaultValue="all" onValueChange={onChange} value={value}>
