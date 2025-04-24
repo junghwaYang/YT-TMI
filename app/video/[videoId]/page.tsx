@@ -7,20 +7,13 @@ import { useEffect, useState } from 'react';
 import Container from '@/components/layout/Container';
 import Title from '@/components/layout/Title';
 import { Button } from '@/components/ui/button';
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from '@/components/ui/pagination';
 import getVisiblePages from '@/lib/getVisiblePages';
 import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 
 import CommentFilter from './_components/CommentFilter';
 import CommentList from './_components/CommentList';
+import CommentPagination from './_components/CommentPagination';
 import CommentSkeleton from './_components/CommentSkeleton';
 import ErrorSection from './_components/ErrorSection';
 import VideoChatSection from './_components/VideoChatSection';
@@ -146,43 +139,12 @@ export default function VideoAnalysisPage() {
           <div className="flex flex-col items-center w-full">
             <CommentList paginatedSentiment={paginatedSentiment} />
 
-            <Pagination className="my-6">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    onClick={e => {
-                      e.preventDefault();
-                      setCurrentPage(p => Math.max(1, p - 1));
-                    }}
-                    className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                  />
-                </PaginationItem>
-
-                {visiblePages.map(page => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={e => {
-                        e.preventDefault();
-                        setCurrentPage(page);
-                      }}
-                      isActive={page === currentPage}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-
-                <PaginationItem>
-                  <PaginationNext
-                    onClick={e => {
-                      e.preventDefault();
-                      setCurrentPage(p => Math.min(totalPages, p + 1));
-                    }}
-                    className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <CommentPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              visiblePages={visiblePages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         ) : (
           <ErrorSection>
