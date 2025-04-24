@@ -37,21 +37,21 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function CommentChart({
-  긍정수,
-  부정수,
-  중립수,
+  positive,
+  negative,
+  neutral,
 }: {
-  긍정수: number;
-  부정수: number;
-  중립수: number;
+  positive: number;
+  negative: number;
+  neutral: number;
 }) {
   const chartData = React.useMemo(
     () => [
-      { reaction: '긍정', visitors: 긍정수, fill: '#4ade80' },
-      { reaction: '부정', visitors: 부정수, fill: '#f87171' },
-      { reaction: '중립', visitors: 중립수, fill: '#facc15' },
+      { reaction: '긍정', visitors: positive, fill: '#4ade80' },
+      { reaction: '부정', visitors: negative, fill: '#f87171' },
+      { reaction: '중립', visitors: neutral, fill: '#facc15' },
     ],
-    [긍정수, 부정수, 중립수]
+    [positive, negative, neutral]
   );
 
   const totalVisitors = React.useMemo(() => {
@@ -65,15 +65,9 @@ export function CommentChart({
         <CardDescription>가장 최신 100개 코멘트 분석표</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[250px]">
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
             <Pie
               data={chartData}
               dataKey="visitors"

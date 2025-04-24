@@ -9,15 +9,10 @@ interface Props {
   loading: boolean;
   videoId: string;
   hasData: boolean;
-  sentimentCount: { 긍정수: number; 부정수: number; 중립수: number };
+  sentimentCount: { positive: number; negative: number; neutral: number };
 }
 
-export default function VideoChatSection({
-  loading,
-  videoId,
-  hasData,
-  sentimentCount,
-}: Props) {
+export default function VideoChatSection({ loading, videoId, hasData, sentimentCount }: Props) {
   return (
     <div className="w-full flex items-center justify-between mb-8 gap-4 flex-col xl:flex-row xl:h-[395px]">
       <VideoEmbed videoId={String(videoId)} />
