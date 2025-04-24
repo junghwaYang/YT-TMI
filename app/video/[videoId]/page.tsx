@@ -31,8 +31,7 @@ export default function VideoAnalysisPage() {
   const [error, setError] = useState<boolean>(false);
 
   const COMMENTS_PER_PAGE = 5;
-  const param = useParams();
-  const { videoId } = param; // youtubeId 추출
+  const { videoId } = useParams<{ videoId: string }>(); // youtubeId 추출
 
   const filteredSentiment = useMemo(() => {
     switch (selectValue) {
