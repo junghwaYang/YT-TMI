@@ -17,14 +17,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
 import VideoEmbed from '@/components/VideoEmbed';
 import getVisiblePages from '@/lib/getVisiblePages';
@@ -32,6 +24,7 @@ import { getYoutubeComments } from '@/lib/getYoutubeComments';
 import { postSentiment } from '@/lib/postSentiment';
 import { cn } from '@/lib/utils';
 
+import CommentFilter from './_components/CommentFilter';
 import ErrorSection from './_components/ErrorSection';
 
 export default function VideoAnalysisPage() {
@@ -153,25 +146,8 @@ export default function VideoAnalysisPage() {
           </ErrorSection>
         )}
       </div>
-      <div className="flex justify-end mb-4">
-        <Select
-          defaultValue="all"
-          onValueChange={handleSelectChange}
-          value={selectValue}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a fruit" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectItem value="all">전체</SelectItem>
-              <SelectItem value="positive">긍정적</SelectItem>
-              <SelectItem value="negative">부정적</SelectItem>
-              <SelectItem value="neutral">중립</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
+      <CommentFilter value={selectValue} onChange={handleSelectChange} />
+
       <div className="flex flex-col w-full items-center justify-center gap-4">
         {loading ? (
           <ul className="w-full space-y-2">
